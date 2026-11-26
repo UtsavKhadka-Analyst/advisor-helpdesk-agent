@@ -30,4 +30,4 @@ Microsoft documentation before answering product questions.
 - Generate request history: uv run python scripts/generate_request_history.py
 
 ## Current stage
-Stage 1, step 1: repo setup
+Stage 1, step 5: reading and demo script
