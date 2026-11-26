@@ -53,6 +53,8 @@ and the recipient. The first response decides.
 | Timed out | Not sent | No one approved it | timed out | 0 |
 | Approved, sending fails | Not sent | Sending failed | send failed | 0 |
 
+For a client reply draft, `outcome` is `answered`, or `failed` if sending fails.
+
 The requester acknowledges the client within 1 business day under POL-07 while the
 full reply waits for approval.
 
