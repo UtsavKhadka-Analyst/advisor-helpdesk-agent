@@ -1,7 +1,7 @@
 # Flow Designs
 
-> Juniper Ridge Financial is a fictional firm. These designs are untested until the
-> flows are built in the trial.
+> Juniper Ridge Financial is a fictional firm. Flow 3 has been built and tested on its
+> own. Flows 1 and 2 are untested designs.
 
 ## Shared rules
 
@@ -109,6 +109,36 @@ Receive values
 
 One request produces one row, written when its outcome is known. A policy question
 that is escalated is logged once, by Flow 2.
+
+A value outside the allowed list is replaced before the row is written, so the
+original text never reaches the log. Matching is exact, including capitals.
+
+| Value | Replacement |
+| --- | --- |
+| `topic` | other |
+| `staff_role`, `category`, `outcome`, `approval_result` | unknown |
+| `minutes_saved` other than 0, 3, 6, 8 or 45 | 0 |
+
+### Build and test results
+
+Built as a Power Automate cloud flow in a solution, so that other flows can call it
+as a child flow. The `date` column uses local time. The failure alert runs when the
+Excel step fails or times out, and relies on the step's default retry setting.
+
+Tested by manual runs on 2026-11-27:
+
+| Test | Result |
+| --- | --- |
+| Allowed values | One row with the values as entered and a new request ID |
+| Values outside the lists | Replaced as in the table above |
+| Workbook deleted, then run | Alert email received with the request ID |
+| Successful run after adding the alert | Row added and alert skipped |
+
+Not yet tested: calls from another flow or the agent, retry behaviour and the timeout
+path.
+
+Known limitation: replaced values are kept out of the log, but the flow's run history
+still shows the original inputs.
 
 ## Excel log layout
 
