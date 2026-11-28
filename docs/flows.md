@@ -1,7 +1,8 @@
 # Flow Designs
 
-> Juniper Ridge Financial is a fictional firm. Flow 3 has been built and tested on its
-> own. Flows 1 and 2 are untested designs.
+> Juniper Ridge Financial is a fictional firm. Flows 1 and 3 have been built and tested
+> by manual runs, except for the parts listed as not built or not tested. Flow 2 is an
+> untested design.
 
 ## Shared rules
 
@@ -62,6 +63,36 @@ The demonstration sends drafts with their placeholders. A real deployment would 
 them from the client record before approval, so the approver sees the final text.
 
 Complaints never enter this flow. They go to Flow 2.
+
+### Build and test results
+
+Built as a Power Automate cloud flow in the same solution as Flow 3, which it calls as
+a child flow. It replies to its caller in the first step. A topic outside the list
+becomes `other`. The backup approval runs only when the first approval has no answer
+and the requester is not the manager.
+
+Approval timeouts are set to 2 minutes for testing. The design value is 1 day.
+
+Tested by manual runs on 2026-11-27 and 2026-11-28:
+
+| Test | Result |
+| --- | --- |
+| First approver approves | Email sent after approval, requester told, row `approved`, 8 minutes |
+| Approver rejects | Requester told with a comments field, row `rejected`, 0 minutes |
+| One approval unanswered, before the backup was added | No client email, requester told, row `timed out`, 0 minutes |
+| First approval unanswered, backup approves | Email sent, requester told, row `approved`, 8 minutes |
+| Manager's own request unanswered | One approval, to the Compliance officer; no client email; row `timed out` |
+| Neither approver answers | Row `timed out`, 0 minutes |
+
+Not yet built: the notice and log row when an approved email fails to send. Not yet
+tested: calls from the agent and the 1-day timeouts.
+
+Known limitations:
+
+- One person plays every role, so the demonstration does not enforce separate
+  approvers.
+- The row is logged after the requester notice, so a failed notice would leave no row.
+- The flow's run history keeps the original inputs.
 
 ## Flow 2: Escalation
 
@@ -134,8 +165,8 @@ Tested by manual runs on 2026-11-27:
 | Workbook deleted, then run | Alert email received with the request ID |
 | Successful run after adding the alert | Row added and alert skipped |
 
-Not yet tested: calls from another flow or the agent, retry behaviour and the timeout
-path.
+Calls from Flow 1 have since added rows successfully. Not yet tested: calls from the
+agent, retry behaviour and the timeout path.
 
 Known limitation: replaced values are kept out of the log, but the flow's run history
 still shows the original inputs.

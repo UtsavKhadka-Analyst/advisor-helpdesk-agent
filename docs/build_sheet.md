@@ -89,7 +89,11 @@ Client reply approval: {topic}
 
 **Approval details**
 
+`{approver_role}` is "Client service manager", or "Compliance officer" when the manager
+made the request. In the backup approval it is "Compliance officer (backup)".
+
 ```text
+Approver role: {approver_role}
 Requested by role: {staff_role}
 Request: {request_summary}
 Source policies: {source_ids}
